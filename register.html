@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ShopGalaxy | Register</title>
+  <link rel="stylesheet" href="styles.css"/>
+  <link rel="stylesheet" href="css/bootstrap.min.css"/>
+  <link rel="stylesheet" href="css/all.min.css"/>
+  <style>
+    :root {
+      --accent-color: #ff6f61;
+      --nav-bg: #ffffff;
+      --dark-bg: #1f1f1f;
+      --text-color: #111;
+    }
+    body {
+      font-family: Arial, sans-serif;
+      background: var(--bg-color, #f9f9f9);
+      color: var(--text-color, #111);
+      margin: 0;
+      padding: 0;
+    }
+    header, footer {
+      background-color: var(--nav-bg, #fff);
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    }
+    .navbar {
+      width: 100%;
+      background-color: var(--nav-bg, #fff);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      position: fixed;
+      top: 0;
+      padding: 10px 20px;
+      z-index: 1000;
+    }
+    .logo img {
+      width: 70px;
+      height: 50px;
+      margin-left: 30px;
+    }
+    .nav-links {
+      list-style: none;
+      display: flex;
+      gap: 1rem;
+      margin: 0;
+      padding: 0;
+    }
+    .nav-links li a {
+      text-decoration: none;
+      color: #333;
+      font-weight: 500;
+      margin-left: 20px;
+      transition: color 0.2s;
+    }
+    .dark-mode .nav-links li a {
+      color: #fff !important;
+    }
+    .nav-links li select, .nav-links li button {
+      margin-left: 20px;
+    }
+
+    .nav-links li a {
+      text-decoration: none;
+      color: var(--light-text);
+      font-weight: 500;
+      margin-left: 20px;
+      transition: all 0.3s ease;
+      padding: 8px 16px;
+      border-radius: 8px;
+    }
+
+    .nav-links li a:hover {
+      background: var(--accent-color);
+      color: white;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px var(--accent-glow);
+    }
+
+    .dark-mode .nav-links li a {
+      color: var(--text-color);
+    }
+
+    .dark-mode .nav-links li a:hover {
+      background: var(--accent-color);
+      color: white;
+      box-shadow: 0 4px 12px var(--accent-glow);
+    }
+
+    .logo img {
+      width: 70px;
+      height: 50px;
+      margin-left: 30px;
+      transition: transform 0.3s ease;
+    }
+
+    .logo img:hover {
+      transform: scale(1.05);
+    }
+
+    /* Theme Toggle Button Enhancement */
+    #theme-toggle {
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      border: none;
+      padding: 10px 15px;
+      border-radius: 25px;
+      color: white;
+      font-size: 1.2rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+    }
+
+    #theme-toggle:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+    }
+
+    .dark-mode #theme-toggle {
+      background: linear-gradient(135deg, #ff6f61, #ff8a80);
+      box-shadow: 0 4px 12px rgba(255, 111, 97, 0.3);
+    }
+
+    .dark-mode #theme-toggle:hover {
+      box-shadow: 0 6px 20px rgba(255, 111, 97, 0.4);
+    }
+
+    /* Language Select Enhancement */
+    #language-select {
+      background: var(--light-input);
+      border: 2px solid var(--light-input-border);
+      border-radius: 8px;
+      padding: 8px 12px;
+      color: var(--light-text);
+      transition: all 0.3s ease;
+    }
+
+    .dark-mode #language-select {
+      background: var(--input-bg);
+      border-color: var(--input-border);
+      color: var(--text-color);
+    }
+
+    #language-select:focus {
+      outline: none;
+      border-color: var(--accent-color);
+      box-shadow: 0 0 0 3px var(--accent-glow);
+    }
+    .menu-toggle {
+      display: none;
+      font-size: 2rem;
+      background: none;
+      border: none;
+      cursor: pointer;
+    }
+    main {
+      margin-top: 80px;
+    }
+    .auth-section {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 80vh;
+      padding: 2rem;
+      margin-top: 0;
+    }
+    .auth-form {
+      background: var(--nav-bg, #fff);
+      padding: 2rem;
+      border-radius: 10px;
+      max-width: 400px;
+      width: 100%;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+    .auth-form h2 {
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+    .auth-form input {
+      width: 100%;
+      padding: 0.75rem;
+      margin-bottom: 1rem;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      font-size: 1rem;
+      background: inherit;
+      color: inherit;
+    }
+    .auth-form button {
+      width: 100%;
+      padding: 0.75rem;
+      border: none;
+      border-radius: 5px;
+      background-color: var(--accent-color, #ff6f61);
+      color: #fff;
+      font-size: 1rem;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background 0.2s;
+    }
+    .auth-form button:hover {
+      background: #e55b50;
+    }
+    .auth-form p {
+      text-align: center;
+      margin-top: 1rem;
+    }
+    .auth-form a {
+      color: var(--accent-color, #ff6f61);
+      text-decoration: none;
+    }
+    .chat-float-btn {
+      position: fixed;
+      right: 30px;
+      bottom: 30px;
+      background: var(--accent-color, #ff6f61);
+      color: #fff;
+      border-radius: 50%;
+      width: 55px;
+      height: 55px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      text-decoration: none;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.13);
+      z-index: 2000;
+    }
+    footer {
+      padding: 2rem;
+      text-align: center;
+      background-color: var(--nav-bg, #fff);
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+      margin-top: 30px;
+    }
+    .social-links {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      margin-top: 1rem;
+      flex-wrap: wrap;
+    }
+    .social-links a {
+      text-decoration: none;
+      font-size: 1.2rem;
+      color: #555;
+    }
+    @media (max-width: 768px) {
+      .nav-links {
+        display: none;
+        flex-direction: column;
+        background-color: var(--nav-bg, #fff);
+        position: absolute;
+        top: 60px;
+        right: 10px;
+        padding: 1rem;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+      .nav-links.show {
+        display: flex;
+      }
+      .menu-toggle {
+        display: block;
+      }
+      .auth-section {
+        padding: 1rem;
+      }
+      footer {
+        font-size: 14px;
+        padding: 1rem;
+      }
+    }
+    .dark-mode {
+      --bg-color: #1f1f1f;
+      --text-color: #f9f9f9;
+      --nav-bg: #23272e;
+    }
+    .dark-mode body,
+    .dark-mode main,
+    .dark-mode .auth-form,
+    .dark-mode .auth-section {
+      background: var(--bg-color) !important;
+      color: var(--text-color) !important;
+    }
+    .dark-mode .navbar,
+    .dark-mode header,
+    .dark-mode footer {
+      background: var(--nav-bg) !important;
+    }
+    .dark-mode .auth-form {
+      background: var(--nav-bg) !important;
+      color: var(--text-color) !important;
+    }
+    .dark-mode .auth-form input {
+      background: #313338;
+      color: #fff;
+      border: 1px solid #666;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <nav class="navbar">
+      <div class="logo"><a href="index.html"><img src="images/logo.png" alt="ShopGalaxy"></a></div>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="index.html" data-i18n="navHome">Home</a></li>
+        <li><a href="products.html" data-i18n="navProducts">Products</a></li>
+        <li><a href="about.html" data-i18n="navAbout">About</a></li>
+        <li><a href="contact.html" data-i18n="navContact">Contact</a></li>
+        <li><a href="login.html" data-i18n="navLogin">Login</a></li>
+        <li><a href="account.html" data-i18n="navAccount" title="Account"><i class="fa-solid fa-user"></i></a></li>
+        <li>
+          <select id="language-select">
+            <option value="en">English</option>
+            <option value="my">မြန်မာ</option>
+          </select>
+        </li>
+        <li><a href="cart.html"><i class="fa-solid fa-cart-plus"></i></a></li>
+        <li>
+          <button id="theme-toggle">🌙</button>
+        </li>
+      </ul>
+      <button class="menu-toggle" id="menuToggle">☰</button>
+    </nav>
+  </header>
+  <main>
+    <section class="auth-section">
+      <form class="auth-form" id="registerForm">
+        <h2 data-i18n="registerTitle">Register</h2>
+        <input type="text" id="regUsername" placeholder="Username" required data-i18n-ph="registerUsername"/>
+        <input type="email" id="regEmail" placeholder="Email" required data-i18n-ph="registerEmail"/>
+        <input type="password" id="regPassword" placeholder="Password" required data-i18n-ph="registerPassword"/>
+        <input type="password" id="regConfirmPassword" placeholder="Confirm Password" required data-i18n-ph="registerConfirm"/>
+        <button type="submit" data-i18n="registerButton">Create Account</button>
+        <p>
+          <span data-i18n="registerHaveAccount">Already have an account?</span>
+          <a href="login.html" data-i18n="registerLogin">Login</a>
+        </p>
+      </form>
+    </section>
+  </main>
+  <footer>
+    <p>&copy; 2025 ShopGalaxy. All rights reserved.</p>
+    <div class="social-links">
+      <a href="https://www.facebook.com"><i class="fa-brands fa-facebook" style="color: #055df5;"></i></a>
+      <a href="https://www.instagram.com"><i class="fa-brands fa-instagram" style="color: #0960f6;"></i></a>
+      <a href="https://www.twitter.com"><i class="fa-brands fa-x-twitter" style="color: #1968f0;"></i></a>
+      <a href="https://www.youtube.com"><i class="fa-brands fa-youtube" style="color: #0b5dea;"></i></a>
+    </div>
+  </footer>
+  <a href="chatbot.html" class="chat-float-btn" title="Need help?">💬</a>
+  <script>
+    // I18N translation dictionary
+    const translations = {
+      en: {
+       
+        registerTitle: "Register",
+        registerUsername: "Username",
+        registerEmail: "Email",
+        registerPassword: "Password",
+        registerConfirm: "Confirm Password",
+        registerButton: "Create Account",
+        registerHaveAccount: "Already have an account?",
+        registerLogin: "Login"
+      },
+      my: {
+        
+        registerTitle: "အကောင့်ဖွင့်ရန်",
+        registerUsername: "အသုံးပြုသူအမည်",
+        registerEmail: "အီးမေးလ်",
+        registerPassword: "လျှို့ဝှက်နံပါတ်",
+        registerConfirm: "လျှို့ဝှက်နံပါတ်အတည်ပြုပါ",
+        registerButton: "အကောင့်ဖွင့်ပါ",
+        registerHaveAccount: "အကောင့်ရှိပြီးသားလား?",
+        registerLogin: "လော့ဂ်အင်"
+      }
+    };
+
+    function updateI18n() {
+      const lang = localStorage.getItem('language') || 'en';
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (translations[lang][key]) {
+          el.textContent = translations[lang][key];
+        }
+      });
+      // Input placeholders
+      document.querySelectorAll('[data-i18n-ph]').forEach(el => {
+        const key = el.getAttribute('data-i18n-ph');
+        if (translations[lang][key]) {
+          el.placeholder = translations[lang][key];
+        }
+      });
+    }
+
+    // Theme toggle setup
+    const themeToggle = document.getElementById('theme-toggle');
+    if (themeToggle) {
+      if (localStorage.getItem('theme') === 'dark') {
+        document.documentElement.classList.add('dark-mode');
+        themeToggle.textContent = '☀️';
+      } else {
+        document.documentElement.classList.remove('dark-mode');
+        themeToggle.textContent = '🌙';
+      }
+      themeToggle.addEventListener('click', () => {
+        document.documentElement.classList.toggle('dark-mode');
+        const isDark = document.documentElement.classList.contains('dark-mode');
+        localStorage.setItem('theme', isDark ? 'dark' : 'light');
+        themeToggle.textContent = isDark ? '☀️' : '🌙';
+      });
+    }
+
+    // Language selector
+    const languageSelect = document.getElementById('language-select');
+    if (languageSelect) {
+      const lang = localStorage.getItem('language') || 'en';
+      languageSelect.value = lang;
+      updateI18n();
+      languageSelect.addEventListener('change', () => {
+        localStorage.setItem('language', languageSelect.value);
+        updateI18n();
+      });
+    } else {
+      updateI18n();
+    }
+
+    // Optional: Apply dark mode on load
+    if (localStorage.getItem('theme') === 'dark') {
+      document.documentElement.classList.add('dark-mode');
+    }
+
+    // Hamburger menu
+    document.getElementById('menuToggle').addEventListener('click', () => {
+      document.querySelector('.nav-links').classList.toggle('show');
+    });
+
+    // Initial language update
+    updateI18n();
+
+    // Registration form logic
+    document.getElementById("registerForm").addEventListener("submit", function (e) {
+      e.preventDefault();
+
+      const username = document.getElementById("regUsername").value.trim();
+      const email = document.getElementById("regEmail").value.trim();
+      const password = document.getElementById("regPassword").value;
+      const confirmPassword = document.getElementById("regConfirmPassword").value;
+
+      if (password !== confirmPassword) {
+        alert(localStorage.getItem('language') === 'my' ? "လျှို့ဝှက်နံပါတ်များ မတူညီပါ။" : "Passwords do not match.");
+        return;
+      }
+
+      let users = JSON.parse(localStorage.getItem("users")) || [];
+      const existingUser = users.find(user => user.email === email);
+
+      if (existingUser) {
+        alert(localStorage.getItem('language') === 'my' ? "ဤအီးမေးလ်နှင့် အကောင့်တစ်ခုရှိပြီးသားဖြစ်သည်။" : "An account with this email already exists.");
+        return;
+      }
+
+      users.push({ username, email, password });
+      localStorage.setItem("users", JSON.stringify(users));
+      alert(localStorage.getItem('language') === 'my' ? "အကောင့်ဖွင့်ခြင်း အောင်မြင်ပါသည်! လော့ဂ်အင် ဝင်နိုင်ပါပြီ။" : "Account created successfully! You can now log in.");
+      window.location.href = "login.html";
+    });
+  </script>
+</body>
+</html>

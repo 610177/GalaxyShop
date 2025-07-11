@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ShopGalaxy | Wallet</title>
+  <link rel="stylesheet" href="styles.css"/>
+  <link rel="stylesheet" href="css/bootstrap.min.css"/>
+  <link rel="stylesheet" href="css/all.min.css"/>
+  <style>
+    :root {
+      --accent-color: #ff6f61;
+      --nav-bg: #ffffff;
+      --dark-bg: #1f1f1f;
+      --text-color: #111;
+      --light-text: #333;
+      --light-input: #f6f6f6;
+      --light-input-border: #eee;
+      --input-bg: #222;
+      --input-border: #444;
+    }
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      background: var(--bg-color, #f9f9f9);
+      color: var(--text-color, #111);
+      font-family: Arial, sans-serif;
+    }
+    .wrapper {
+      flex: 1 0 auto;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+    main {
+      flex: 1 0 auto;
+      margin-top: 80px;
+      padding-bottom: 40px;
+    }
+    header, footer {
+      background-color: var(--nav-bg, #fff);
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    }
+    /* Navbar (from about.html) */
+    .navbar {
+      width: 100%;
+      background-color: var(--nav-bg, #fff);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      position: fixed;
+      top: 0;
+      padding: 10px 20px;
+      z-index: 1000;
+    }
+    .logo img {
+      width: 70px;
+      height: 50px;
+      margin-left: 30px;
+      transition: transform 0.3s ease;
+    }
+    .logo img:hover {
+      transform: scale(1.05);
+    }
+    .nav-links {
+      list-style: none;
+      display: flex;
+      gap: 1rem;
+      margin: 0;
+      padding: 0;
+    }
+    .nav-links li a {
+      text-decoration: none;
+      color: var(--light-text, #333);
+      font-weight: 500;
+      margin-left: 20px;
+      transition: all 0.3s ease;
+      padding: 8px 16px;
+      border-radius: 8px;
+    }
+    .nav-links li a:hover {
+      background: var(--accent-color);
+      color: white;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px var(--accent-glow);
+    }
+    .dark-mode .nav-links li a {
+      color: var(--text-color, #f9f9f9) !important;
+    }
+    .dark-mode .nav-links li a:hover {
+      background: var(--accent-color);
+      color: white;
+      box-shadow: 0 4px 12px var(--accent-glow);
+    }
+    .nav-links li select, .nav-links li button {
+      margin-left: 20px;
+    }
+    .menu-toggle {
+      display: none;
+      font-size: 2rem;
+      background: none;
+      border: none;
+      cursor: pointer;
+    }
+    /* Theme Toggle Button Enhancement */
+    #theme-toggle {
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      border: none;
+      padding: 10px 15px;
+      border-radius: 25px;
+      color: white;
+      font-size: 1.2rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+    }
+    #theme-toggle:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+    }
+    .dark-mode #theme-toggle {
+      background: linear-gradient(135deg, #ff6f61, #ff8a80);
+      box-shadow: 0 4px 12px rgba(255, 111, 97, 0.3);
+    }
+    .dark-mode #theme-toggle:hover {
+      box-shadow: 0 6px 20px rgba(255, 111, 97, 0.4);
+    }
+    /* Language Select Enhancement */
+    #language-select {
+      background: var(--light-input);
+      border: 2px solid var(--light-input-border);
+      border-radius: 8px;
+      padding: 8px 12px;
+      color: var(--light-text);
+      transition: all 0.3s ease;
+    }
+    .dark-mode #language-select {
+      background: var(--input-bg);
+      border-color: var(--input-border);
+      color: var(--text-color);
+    }
+    #language-select:focus {
+      outline: none;
+      border-color: var(--accent-color);
+      box-shadow: 0 0 0 3px var(--accent-glow);
+    }
+    /* Wallet page specific */
+    .wallet-container {
+      max-width: 600px;
+      margin: 2rem auto 0 auto;
+      background: var(--nav-bg, #fff);
+      border-radius: 12px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+      padding: 2rem;
+    }
+    .wallet-header {
+      text-align: center;
+      font-size: 2rem;
+      font-weight: bold;
+      margin-bottom: 1rem;
+      color: var(--accent-color);
+    }
+    .wallet-balance {
+      text-align: center;
+      font-size: 1.5rem;
+      margin-bottom: 2rem;
+      background: #f4f4f4;
+      padding: 1rem 0;
+      border-radius: 8px;
+    }
+    .dark-mode .wallet-balance {
+      background: #23272e;
+      color: #ffbe99;
+    }
+    .wallet-actions {
+      display: flex;
+      justify-content: center;
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+    }
+    .wallet-actions button {
+      background: var(--accent-color);
+      color: #fff;
+      border: none;
+      padding: 0.75rem 1.5rem;
+      font-size: 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background 0.2s;
+    }
+    .wallet-actions button:hover {
+      background: #e55b50;
+    }
+    .membership-section {
+      margin-bottom: 2rem;
+      border: 1px solid var(--accent-color);
+      border-radius: 8px;
+      padding: 1rem;
+      background: #fff6f4;
+    }
+    .membership-title {
+      font-weight: bold;
+      color: var(--accent-color);
+      margin-bottom: 0.5rem;
+    }
+    .membership-current {
+      margin-bottom: 0.75rem;
+    }
+    .membership-btn {
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: #fff;
+      border: none;
+      padding: 0.5rem 1.25rem;
+      border-radius: 20px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background 0.2s;
+    }
+    .membership-btn:hover {
+      background: linear-gradient(135deg, #ff6f61, #ff8a80);
+    }
+    .wallet-form {
+      display: none;
+      margin-bottom: 2rem;
+      background: #f4f4f4;
+      padding: 1rem;
+      border-radius: 8px;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    .wallet-form input[type="number"] {
+      width: 100%;
+      padding: 0.5rem;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      font-size: 1rem;
+    }
+    .wallet-form select {
+      padding: 0.5rem;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      font-size: 1rem;
+      width: 100%;
+    }
+    .wallet-form .submit-btn {
+      background: var(--accent-color);
+      color: #fff;
+      font-weight: bold;
+      border: none;
+      border-radius: 6px;
+      padding: 0.5rem 1.5rem;
+      cursor: pointer;
+      width: auto;
+      align-self: flex-end;
+    }
+    .wallet-form .submit-btn:hover {
+      background: #e55b50;
+    }
+    .wallet-history {
+      margin-top: 1.5rem;
+    }
+    .wallet-history h4 {
+      margin-bottom: 0.5rem;
+      color: #555;
+      font-size: 1.1rem;
+    }
+    .wallet-history ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      max-height: 160px;
+      overflow-y: auto;
+    }
+    .wallet-history li {
+      padding: 0.5rem 0;
+      border-bottom: 1px solid #eee;
+      font-size: 0.98rem;
+      display: flex;
+      justify-content: space-between;
+    }
+    .wallet-history .amount {
+      font-weight: bold;
+    }
+    .dark-mode .wallet-container,
+    .dark-mode .wallet-form {
+      background: #23272e !important;
+      color: #f9f9f9 !important;
+    }
+    .dark-mode .membership-section {
+      background: #23272e;
+      border-color: #ff6f61;
+      color: #ffbe99;
+    }
+    .dark-mode .wallet-history h4 {
+      color: #ffbe99;
+    }
+    @media (max-width: 600px) {
+      .wallet-container {
+        padding: 1rem 0.2rem;
+        max-width: 98vw;
+      }
+    }
+    @media (max-width: 768px) {
+      .nav-links {
+        display: none;
+        flex-direction: column;
+        background-color: var(--nav-bg, #fff);
+        position: absolute;
+        top: 60px;
+        right: 10px;
+        padding: 1rem;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+      .nav-links.show {
+        display: flex;
+      }
+      .menu-toggle {
+        display: block;
+      }
+      footer {
+      flex-shrink: 0;
+      padding: 2rem;
+      text-align: center;
+      background-color: var(--nav-bg, #fff);
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+      margin-top: 30px;
+    }
+    .social-links {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      margin-top: 1rem;
+      flex-wrap: wrap;
+    }
+    .social-links a {
+      text-decoration: none;
+      font-size: 1.2rem;
+      color: #555;
+    }
+    }
+    .dark-mode {
+      --bg-color: #1f1f1f;
+      --text-color: #f9f9f9;
+      --nav-bg: #23272e;
+    }
+    .dark-mode body,
+    .dark-mode main,
+    .dark-mode .wallet-container {
+      background: var(--bg-color) !important;
+      color: var(--text-color) !important;
+    }
+    .dark-mode .navbar,
+    .dark-mode header,
+    .dark-mode footer {
+      background: var(--nav-bg) !important;
+    }
+    .dark-mode .wallet-container {
+      background: var(--nav-bg) !important;
+      color: var(--text-color) !important;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <nav class="navbar">
+      <div class="logo"><a href="index.html"><img src="images/logo.png" alt="ShopGalaxy"></a></div>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="products.html">Products</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="contact.html">Contact</a></li>
+        <li><a href="login.html">Login</a></li>
+        <li><a href="account.html" title="Account"><i class="fa-solid fa-user"></i></a></li>
+        <li>
+          <select id="language-select">
+            <option value="en">English</option>
+            <option value="my">မြန်မာ</option>
+          </select>
+        </li>
+        <li><a href="cart.html"><i class="fa-solid fa-cart-plus"></i></a></li>
+        <li>
+          <button id="theme-toggle">🌙</button>
+        </li>
+      </ul>
+      <button class="menu-toggle" id="menuToggle">☰</button>
+    </nav>
+  </header>
+  <main>
+    <div class="wallet-container">
+      <div class="wallet-header"><i class="fa-solid fa-wallet"></i> My Wallet</div>
+      <div class="wallet-balance">Balance: <span id="wallet-balance">0.00</span> MMK</div>
+      <div class="wallet-actions">
+        <button id="depositBtn"><i class="fa-solid fa-arrow-down"></i> Deposit</button>
+        <button id="withdrawBtn"><i class="fa-solid fa-arrow-up"></i> Withdraw</button>
+      </div>
+      <form id="walletForm" class="wallet-form">
+        <label>
+          <span id="formTypeLabel">Deposit</span> Amount (MMK):
+          <input type="number" min="100" step="100" id="walletAmount" required />
+        </label>
+        <label>
+          Payment Method:
+          <select id="walletMethod" required>
+            <option value="">Select</option>
+            <option value="kbzpay">KBZPay</option>
+            <option value="wavepay">WavePay</option>
+            <option value="aya">AYA Pay</option>
+            <option value="visa">Visa/Master</option>
+            <option value="cash">Cash</option>
+          </select>
+        </label>
+        <button type="submit" class="submit-btn">Submit</button>
+      </form>
+      <div class="membership-section">
+        <div class="membership-title"><i class="fa-solid fa-crown"></i> Membership Subscription</div>
+        <div class="membership-current">
+          Current: <span id="membership-type">Free</span>
+        </div>
+        <button class="membership-btn" id="subscribeBtn">Upgrade Membership</button>
+      </div>
+      <div class="wallet-history">
+        <h4><i class="fa-solid fa-clock-rotate-left"></i> Wallet Transaction History</h4>
+        <ul id="walletHistory"></ul>
+      </div>
+    </div>
+  </main>
+
+  <a href="chatbot.html" class="chat-float-btn" title="Need help?">💬</a>
+  <script>
+    // Theme toggle
+    const themeToggle = document.getElementById('theme-toggle');
+    if (themeToggle) {
+      if (localStorage.getItem('theme') === 'dark') {
+        document.documentElement.classList.add('dark-mode');
+        themeToggle.textContent = '☀️';
+      } else {
+        document.documentElement.classList.remove('dark-mode');
+        themeToggle.textContent = '🌙';
+      }
+      themeToggle.addEventListener('click', () => {
+        document.documentElement.classList.toggle('dark-mode');
+        const isDark = document.documentElement.classList.contains('dark-mode');
+        localStorage.setItem('theme', isDark ? 'dark' : 'light');
+        themeToggle.textContent = isDark ? '☀️' : '🌙';
+      });
+    }
+    // Hamburger menu
+    document.getElementById('menuToggle').addEventListener('click', () => {
+      document.querySelector('.nav-links').classList.toggle('show');
+    });
+
+    // User & Wallet Logic
+    const sessionUser = localStorage.getItem("sessionUser");
+    if (!sessionUser) {
+      alert("Please log in to access your wallet.");
+      window.location.href = "login.html";
+    }
+
+    // Helper to load/save wallet
+    function getWallet() {
+      return JSON.parse(localStorage.getItem('wallet_' + sessionUser)) || {
+        balance: 0,
+        membership: "Free",
+        history: []
+      };
+    }
+    function setWallet(data) {
+      localStorage.setItem('wallet_' + sessionUser, JSON.stringify(data));
+    }
+    function updateWalletUI() {
+      const wallet = getWallet();
+      document.getElementById("wallet-balance").textContent = Number(wallet.balance).toLocaleString();
+      document.getElementById("membership-type").textContent = wallet.membership;
+      // Transaction history
+      const hist = wallet.history || [];
+      const walletHistory = document.getElementById("walletHistory");
+      walletHistory.innerHTML = "";
+      if(hist.length === 0) {
+        walletHistory.innerHTML = "<li>No transactions yet.</li>";
+      } else {
+        hist.slice(-10).reverse().forEach(item => {
+          walletHistory.innerHTML += `<li>
+            <span>${item.type}</span>
+            <span class="amount" style="color:${item.type==='Deposit'? 'green':'red'};">
+              ${item.type==='Deposit'?'+':'-'}${Number(item.amount).toLocaleString()} MMK
+            </span>
+            <span style="font-size:0.95em; color:#aaa;">${item.date}</span>
+          </li>`;
+        });
+      }
+    }
+
+    // Deposit & Withdraw buttons
+    const walletForm = document.getElementById("walletForm");
+    const depositBtn = document.getElementById("depositBtn");
+    const withdrawBtn = document.getElementById("withdrawBtn");
+    let formType = "Deposit";
+    depositBtn.onclick = () => {
+      walletForm.style.display = "flex";
+      formType = "Deposit";
+      document.getElementById("formTypeLabel").textContent = "Deposit";
+      walletForm.querySelector(".submit-btn").textContent = "Submit";
+    };
+    withdrawBtn.onclick = () => {
+      walletForm.style.display = "flex";
+      formType = "Withdraw";
+      document.getElementById("formTypeLabel").textContent = "Withdraw";
+      walletForm.querySelector(".submit-btn").textContent = "Submit";
+    };
+    walletForm.onsubmit = function(e) {
+      e.preventDefault();
+      const amount = Number(document.getElementById("walletAmount").value);
+      const method = document.getElementById("walletMethod").value;
+      if (isNaN(amount) || amount < 100) {
+        alert("Enter a valid amount (minimum 100 MMK).");
+        return;
+      }
+      if (!method) {
+        alert("Please select a payment method.");
+        return;
+      }
+      let wallet = getWallet();
+      const now = new Date().toLocaleString();
+      if(formType === "Deposit") {
+        wallet.balance += amount;
+        wallet.history.push({type: "Deposit", amount, method, date: now});
+      } else if(formType === "Withdraw") {
+        if(wallet.balance < amount) {
+          alert("Insufficient balance!");
+          return;
+        }
+        wallet.balance -= amount;
+        wallet.history.push({type: "Withdraw", amount, method, date: now});
+      }
+      setWallet(wallet);
+      updateWalletUI();
+      walletForm.reset();
+      walletForm.style.display = "none";
+      alert(formType + " successful!");
+    };
+
+    // Membership Subscription
+    document.getElementById("subscribeBtn").onclick = function() {
+      let wallet = getWallet();
+      if(wallet.membership === "Premium") {
+        alert("You are already a Premium member.");
+        return;
+      }
+      if(wallet.balance < 10000) {
+        alert("You need at least 10,000 MMK in your wallet to subscribe to Premium.");
+        return;
+      }
+      if(confirm("Subscribe to Premium Membership for 10,000 MMK?")) {
+        wallet.balance -= 10000;
+        wallet.membership = "Premium";
+        wallet.history.push({
+          type: "Subscription",
+          amount: 10000,
+          method: "Wallet",
+          date: new Date().toLocaleString()
+        });
+        setWallet(wallet);
+        updateWalletUI();
+        alert("You are now a Premium member!");
+      }
+    };
+
+    // On load
+    updateWalletUI();
+
+    // (Optional) Support language select for future
+    const languageSelect = document.getElementById('language-select');
+    if (languageSelect) {
+      const lang = localStorage.getItem('language') || 'en';
+      languageSelect.value = lang;
+      languageSelect.addEventListener('change', () => {
+        localStorage.setItem('language', languageSelect.value);
+        // Could update i18n here
+      });
+    }
+  </script>
+</body>
+</html>

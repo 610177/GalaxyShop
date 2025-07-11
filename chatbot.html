@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ShopGalaxy | AI Assistant</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="css/all.min.css">
+  <link rel="stylesheet" href="css/bootstrap.min.css">
+  <script defer src="script.js"></script>
+  <style>
+    :root {
+      --accent-color: #ff6f61;
+      --accent-glow: #ff6f6133;
+      --nav-bg: #ffffff;
+      --dark-bg: #1f1f1f;
+      --text-color: #111;
+      --light-text: #333;
+      --light-input: #f6f6f6;
+      --light-input-border: #eee;
+      --input-bg: #222;
+      --input-border: #444;
+    }
+    body {
+      font-family: Arial, sans-serif;
+      background: var(--bg-color, #f9f9f9);
+      color: var(--text-color, #111);
+      margin: 0;
+      padding: 0;
+    }
+    header, footer {
+      background-color: var(--nav-bg, #fff);
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    }
+    .navbar {
+      width: 100%;
+      background-color: var(--nav-bg, #fff);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      position: fixed;
+      top: 0;
+      padding: 10px 20px;
+      z-index: 1000;
+    }
+    .logo img {
+      width: 70px;
+      height: 50px;
+      margin-left: 30px;
+      transition: transform 0.3s ease;
+    }
+    .logo img:hover {
+      transform: scale(1.05);
+    }
+    .nav-links {
+      list-style: none;
+      display: flex;
+      gap: 1rem;
+      margin: 0;
+      padding: 0;
+    }
+    .nav-links li a {
+      text-decoration: none;
+      color: var(--light-text, #333);
+      font-weight: 500;
+      margin-left: 20px;
+      transition: all 0.3s ease;
+      padding: 8px 16px;
+      border-radius: 8px;
+    }
+    .nav-links li a:hover {
+      background: var(--accent-color);
+      color: white;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px var(--accent-glow);
+    }
+    .dark-mode .nav-links li a {
+      color: var(--text-color, #f9f9f9) !important;
+    }
+    .dark-mode .nav-links li a:hover {
+      background: var(--accent-color);
+      color: white;
+      box-shadow: 0 4px 12px var(--accent-glow);
+    }
+    .nav-links li select, .nav-links li button {
+      margin-left: 20px;
+    }
+    .menu-toggle {
+      display: none;
+      font-size: 2rem;
+      background: none;
+      border: none;
+      cursor: pointer;
+    }
+
+    /* Theme Toggle Button Enhancement */
+    #theme-toggle {
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      border: none;
+      padding: 10px 15px;
+      border-radius: 25px;
+      color: white;
+      font-size: 1.2rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+    }
+    #theme-toggle:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+    }
+    .dark-mode #theme-toggle {
+      background: linear-gradient(135deg, #ff6f61, #ff8a80);
+      box-shadow: 0 4px 12px rgba(255, 111, 97, 0.3);
+    }
+    .dark-mode #theme-toggle:hover {
+      box-shadow: 0 6px 20px rgba(255, 111, 97, 0.4);
+    }
+
+    /* Language Select Enhancement */
+    #language-select {
+      background: var(--light-input);
+      border: 2px solid var(--light-input-border);
+      border-radius: 8px;
+      padding: 8px 12px;
+      color: var(--light-text);
+      transition: all 0.3s ease;
+    }
+    .dark-mode #language-select {
+      background: var(--input-bg);
+      border-color: var(--input-border);
+      color: var(--text-color);
+    }
+    #language-select:focus {
+      outline: none;
+      border-color: var(--accent-color);
+      box-shadow: 0 0 0 3px var(--accent-glow);
+    }
+
+    .chat-container {
+      max-width: 600px;
+      margin: 2rem auto;
+      background: var(--nav-bg, #fff);
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      display: flex;
+      flex-direction: column;
+      height: 80vh;
+      overflow: hidden;
+      margin-top: 150px;
+    }
+    .chat-header {
+      background: var(--accent-color);
+      color: white;
+      padding: 1rem;
+      text-align: center;
+      font-weight: bold;
+    }
+    .chat-messages {
+      flex: 1;
+      padding: 1rem;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+    .chat-input {
+      display: flex;
+      border-top: 1px solid #ccc;
+    }
+    .chat-input input {
+      flex: 1;
+      padding: 1rem;
+      border: none;
+      font-size: 1rem;
+    }
+    .chat-input button {
+      background: var(--accent-color);
+      color: white;
+      border: none;
+      padding: 1rem 1.5rem;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+    .message {
+      padding: 0.75rem 1rem;
+      border-radius: 10px;
+      max-width: 80%;
+    }
+    .user-message {
+      align-self: flex-end;
+      background: #007bff;
+      color: white;
+    }
+    .bot-message {
+      align-self: flex-start;
+      background: #e0e0e0;
+    }
+    .dark-mode .chat-container,
+    .dark-mode .chat-header,
+    .dark-mode .chat-messages,
+    .dark-mode .chat-input {
+      background: var(--nav-bg) !important;
+      color: var(--text-color) !important;
+    }
+    .dark-mode .bot-message {
+      background: #333;
+      color: #f9f9f9;
+    }
+    .dark-mode .user-message {
+      background: #ff6f61;
+      color: #fff;
+    }
+    footer {
+      padding: 2rem;
+      text-align: center;
+      background-color: var(--nav-bg, #fff);
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+      margin-top: 30px;
+    }
+    .social-links {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+    .social-links a {
+      text-decoration: none;
+      font-size: 1.2rem;
+      color: #555;
+    }
+    @media (max-width: 768px) {
+      .nav-links {
+        display: none;
+        flex-direction: column;
+        background-color: var(--nav-bg, #fff);
+        position: absolute;
+        top: 60px;
+        right: 10px;
+        padding: 1rem;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+      .nav-links.show {
+        display: flex;
+      }
+      .menu-toggle {
+        display: block;
+      }
+      .chat-container {
+        max-width: 95vw;
+        margin-top: 100px;
+      }
+      footer {
+        font-size: 14px;
+        padding: 1rem;
+      }
+    }
+    .dark-mode {
+      --bg-color: #1f1f1f;
+      --text-color: #f9f9f9;
+      --nav-bg: #23272e;
+    }
+    .dark-mode body,
+    .dark-mode main,
+    .dark-mode .chat-container {
+      background: var(--bg-color) !important;
+      color: var(--text-color) !important;
+    }
+    .dark-mode .navbar,
+    .dark-mode header,
+    .dark-mode footer {
+      background: var(--nav-bg) !important;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <nav class="navbar">
+      <div class="logo"><a href="index.html"><img src="images/logo.png" alt="ShopGalaxy"></a></div>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="products.html">Products</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="contact.html">Contact</a></li>
+        <li><a href="login.html">Login</a></li>
+        <li><a href="account.html" title="Account"><i class="fa-solid fa-user"></i></a></li>
+        <li>
+          <select id="language-select">
+            <option value="en">English</option>
+            <option value="my">မြန်မာ</option>
+          </select>
+        </li>
+        <li><a href="cart.html"><i class="fa-solid fa-cart-plus"></i></a></li>
+        <li>
+          <button id="theme-toggle">🌙</button>
+        </li>
+      </ul>
+      <button class="menu-toggle" id="menuToggle">☰</button>
+    </nav>
+  </header>
+  <main>
+    <div class="chat-container">
+      <div class="chat-header">AI Support Assistant</div>
+      <div class="chat-messages" id="chatMessages"></div>
+      <div class="chat-input">
+        <input type="text" id="chatInput" placeholder="Type your issue here...">
+        <button id="sendBtn">Send</button>
+      </div>
+    </div>
+  </main>
+  <footer>
+    <p>&copy; 2025 ShopGalaxy. All rights reserved.</p>
+    <div class="social-links">
+      <a href="https://www.facebook.com"><i class="fa-brands fa-facebook" style="color: #055df5;"></i></a>
+      <a href="https://www.instagram.com"><i class="fa-brands fa-instagram" style="color: #0960f6;"></i></a>
+      <a href="https://www.twitter.com"><i class="fa-brands fa-x-twitter" style="color: #1968f0;"></i></a>
+      <a href="https://www.youtube.com"><i class="fa-brands fa-youtube" style="color: #0b5dea;"></i></a>
+    </div>
+  </footer>
+<script>
+  // Theme toggle setup
+  const themeToggle = document.getElementById('theme-toggle');
+  if (themeToggle) {
+    if (localStorage.getItem('theme') === 'dark') {
+      document.documentElement.classList.add('dark-mode');
+      themeToggle.textContent = '☀️';
+    } else {
+      document.documentElement.classList.remove('dark-mode');
+      themeToggle.textContent = '🌙';
+    }
+
+    themeToggle.addEventListener('click', () => {
+      document.documentElement.classList.toggle('dark-mode');
+      const isDark = document.documentElement.classList.contains('dark-mode');
+      localStorage.setItem('theme', isDark ? 'dark' : 'light');
+      themeToggle.textContent = isDark ? '☀️' : '🌙';
+    });
+  }
+
+  // Hamburger menu
+  document.getElementById('menuToggle').addEventListener('click', () => {
+    document.querySelector('.nav-links').classList.toggle('show');
+  });
+
+  // Optional: Apply dark mode on load
+  if (localStorage.getItem('theme') === 'dark') {
+    document.documentElement.classList.add('dark-mode');
+  }
+
+  // Language selector setup (future i18n-ready)
+  const languageSelect = document.getElementById('language-select');
+  if (languageSelect) {
+    const lang = localStorage.getItem('language') || 'en';
+    languageSelect.value = lang;
+    languageSelect.addEventListener('change', () => {
+      localStorage.setItem('language', languageSelect.value);
+      // If implementing i18n in future, trigger update here
+    });
+  }
+
+  // Chatbot logic (unchanged)
+  const chatInput = document.getElementById('chatInput');
+  const chatMessages = document.getElementById('chatMessages');
+  const sendBtn = document.getElementById('sendBtn');
+  let conversationContext = { lastIntent: null };
+  const intents = [
+    {
+      keywords: ['refund', 'money back', 'return'],
+      reply: "You can request a refund by going to your order history and selecting 'Request Refund'.",
+      tag: 'refund',
+    },
+    {
+      keywords: ['delivery', 'shipping', 'arrive', 'ship'],
+      reply: "Standard delivery takes 2–5 business days. You can track your order under 'My Orders'.",
+      tag: 'shipping',
+    },
+    {
+      keywords: ['broken', 'damaged', 'defect', 'not working'],
+      reply: "Sorry about that! Please upload a photo of the damaged item and our team will assist you.",
+      tag: 'damage',
+    },
+    {
+      keywords: ['late', 'delay', 'not arrived'],
+      reply: "Apologies! Sometimes delivery is delayed. Please check your tracking number or contact support.",
+      tag: 'delay',
+    },
+    {
+      keywords: ['contact', 'email', 'call', 'phone'],
+      reply: "You can contact us via email at support@shopgalaxy.com or call us at +95 123 456 789.",
+      tag: 'contact',
+    },
+    {
+      keywords: ['order', 'buy', 'purchase'],
+      reply: "To place an order, go to the Products page, add items to your cart, and proceed to checkout.",
+      tag: 'order',
+    }
+  ];
+  function detectIntent(userMsg) {
+    for (let intent of intents) {
+      for (let keyword of intent.keywords) {
+        if (userMsg.includes(keyword)) {
+          conversationContext.lastIntent = intent.tag;
+          return intent.reply;
+        }
+      }
+    }
+    return "I'm not sure I understand. Can you rephrase that or provide more details?";
+  }
+  function addMessage(content, isUser) {
+    const msg = document.createElement('div');
+    msg.className = `message ${isUser ? 'user-message' : 'bot-message'}`;
+    msg.textContent = content;
+    chatMessages.appendChild(msg);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+  }
+  sendBtn.addEventListener('click', () => {
+    const userMsg = chatInput.value.trim().toLowerCase();
+    if (userMsg === '') return;
+    addMessage(userMsg, true);
+    chatInput.value = '';
+    setTimeout(() => {
+      const botReply = detectIntent(userMsg);
+      addMessage(botReply, false);
+    }, 700);
+  });
+  chatInput.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      sendBtn.click();
+    }
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>ShopGalaxy | Chat</title>
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    body {
+      background: var(--bg-color,#f9f9f9);
+      font-family: Arial,sans-serif;
+      margin: 0;
+      padding: 0;
+      color: var(--text-color,#111);
+    }
+    .chat-container {
+      max-width: 480px;
+      margin: 2.5rem auto;
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+      padding: 2rem 1.5rem 1rem 1.5rem;
+      display: flex;
+      flex-direction: column;
+      min-height: 70vh;
+    }
+    .chat-header {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+    }
+    .chat-header .back-link {
+      font-size: 1.5rem;
+      margin-right: 0.6rem;
+      color: #444;
+      text-decoration: none;
+      transition: color 0.15s;
+    }
+    .chat-header .back-link:hover {
+      color: #ff6f61;
+    }
+    .chat-header .avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: #ececec;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 1.25rem;
+      color: #348;
+    }
+    .chat-messages {
+      flex: 1 1 auto;
+      overflow-y: auto;
+      margin-bottom: 1rem;
+      padding: 0.5rem 0.25rem;
+    }
+    .chat-msg {
+      margin-bottom: 0.7rem;
+      display: flex;
+      flex-direction: column;
+      max-width: 80%;
+      word-break: break-word;
+    }
+    .chat-msg.sent {
+      align-self: flex-end;
+      text-align: right;
+      background: #eaf6ff;
+      border-radius: 12px 12px 3px 12px;
+      padding: 0.5rem 0.8rem;
+      margin-right: 0;
+    }
+    .chat-msg.received {
+      align-self: flex-start;
+      text-align: left;
+      background: #f3ede6;
+      border-radius: 12px 12px 12px 3px;
+      padding: 0.5rem 0.8rem;
+      margin-left: 0;
+    }
+    .chat-msg .meta {
+      font-size: 0.72rem;
+      color: #888;
+      margin-top: 2px;
+    }
+    .chat-form {
+      display: flex;
+      gap: 0.5rem;
+    }
+    .chat-form input[type="text"] {
+      flex: 1 1 auto;
+      padding: 0.7rem;
+      border-radius: 20px;
+      border: 1px solid #ccc;
+      font-size: 1rem;
+    }
+    .chat-form button {
+      background: var(--accent-color,#ff6f61);
+      color: #fff;
+      border: none;
+      border-radius: 50%;
+      width: 42px;
+      height: 42px;
+      font-size: 1.2rem;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .chat-form button:hover {
+      background: #e55a4e;
+    }
+    .empty-chat {
+      color: #aaa;
+      text-align: center;
+      margin-top: 2.5rem;
+      margin-bottom: 2.5rem;
+      font-size: 1.05rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="chat-container">
+    <div class="chat-header">
+      <a href="products.html" class="back-link" title="Back to products">&#8592;</a>
+      <div class="avatar" id="sellerAvatar"></div>
+      <div id="sellerName"></div>
+    </div>
+    <div class="chat-messages" id="chatMessages"></div>
+    <form class="chat-form" id="chatForm" autocomplete="off">
+      <input type="text" id="chatInput" placeholder="Type your message..." maxlength="500" required />
+      <button type="submit" title="Send">&#10148;</button>
+    </form>
+  </div>
+  <script>
+    // Get current user
+    const sessionUser = localStorage.getItem("sessionUser");
+    // Get seller from query string
+    const url = new URL(window.location.href);
+    const seller = url.searchParams.get("seller");
+
+    // Prevent chatting with yourself or if not logged in
+    if (!sessionUser) {
+      alert("Please log in to chat.");
+      window.location.href = "login.html";
+    } else if (!seller) {
+      alert("No seller specified.");
+      window.location.href = "products.html";
+    } else if (sessionUser === seller) {
+      alert("You cannot chat with yourself.");
+      window.location.href = "products.html";
+    }
+
+    // Set seller name and avatar
+    document.getElementById("sellerName").textContent = seller;
+    document.getElementById("sellerAvatar").textContent = seller[0] ? seller[0].toUpperCase() : "?";
+
+    // Unique chat key for every user-seller pair (order-insensitive)
+    function getChatKey(u1, u2) {
+      return "chat_" + [u1, u2].sort().join("_");
+    }
+    const chatKey = getChatKey(sessionUser, seller);
+
+    // Load messages
+    function loadMessages() {
+      const msgDiv = document.getElementById("chatMessages");
+      msgDiv.innerHTML = "";
+      let messages = JSON.parse(localStorage.getItem(chatKey) || "[]");
+      if (!messages.length) {
+        msgDiv.innerHTML = '<div class="empty-chat">No messages yet. Start the conversation!</div>';
+        return;
+      }
+      messages.forEach(msg => {
+        const msgElem = document.createElement("div");
+        msgElem.className = "chat-msg " + (msg.sender === sessionUser ? "sent" : "received");
+        msgElem.innerHTML = `
+          <div>${msg.text}</div>
+          <div class="meta">${msg.sender === sessionUser ? "You" : msg.sender} &bull; ${new Date(msg.timestamp).toLocaleString()}</div>
+        `;
+        msgDiv.appendChild(msgElem);
+      });
+      msgDiv.scrollTop = msgDiv.scrollHeight;
+    }
+
+    // Send a message
+    document.getElementById("chatForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+      const input = document.getElementById("chatInput");
+      let text = input.value.trim();
+      if (!text) return;
+      let messages = JSON.parse(localStorage.getItem(chatKey) || "[]");
+      messages.push({
+        sender: sessionUser,
+        text,
+        timestamp: Date.now()
+      });
+      localStorage.setItem(chatKey, JSON.stringify(messages));
+      input.value = "";
+      loadMessages();
+    });
+
+    // Initial load and live update
+    loadMessages();
+    // Optional: Poll for updates every 2s to see seller messages appear live (if both online)
+    setInterval(loadMessages, 2000);
+  </script>
+</body>
+</html>

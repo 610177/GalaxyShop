@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ShopGalaxy | Cart</title>
+  <link rel="stylesheet" href="styles.css"/>
+  <link rel="stylesheet" href="css/bootstrap.min.css"/>
+  <link rel="stylesheet" href="css/all.min.css"/>
+  <style>
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      background: var(--bg-color, #f9f9f9);
+      color: var(--text-color, #111);
+      font-family: Arial, sans-serif;
+    }
+    .wrapper {
+      flex: 1 0 auto;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+    main {
+      flex: 1 0 auto;
+    }
+    header, footer {
+      background-color: var(--nav-bg, #fff);
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    }
+    .navbar {
+      width: 100%;
+      background-color: var(--nav-bg, #fff);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      position: fixed;
+      top: 0;
+      padding: 10px 20px;
+      z-index: 1000;
+    }
+    .logo img {
+      width: 70px;
+      height: 50px;
+      margin-left: 30px;
+      transition: transform 0.3s ease;
+    }
+    .logo img:hover {
+      transform: scale(1.05);
+    }
+    .nav-links {
+      list-style: none;
+      display: flex;
+      gap: 1rem;
+      margin: 0;
+      padding: 0;
+    }
+    .nav-links li a {
+      text-decoration: none;
+      color: var(--light-text, #333);
+      font-weight: 500;
+      margin-left: 20px;
+      transition: all 0.3s ease;
+      padding: 8px 16px;
+      border-radius: 8px;
+    }
+    .nav-links li a:hover {
+      background: var(--accent-color);
+      color: white;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px var(--accent-glow);
+    }
+    .dark-mode .nav-links li a {
+      color: var(--text-color, #f9f9f9) !important;
+    }
+    .dark-mode .nav-links li a:hover {
+      background: var(--accent-color);
+      color: white;
+      box-shadow: 0 4px 12px var(--accent-glow);
+    }
+    .nav-links li select, .nav-links li button {
+      margin-left: 20px;
+    }
+    .menu-toggle {
+      display: none;
+      font-size: 2rem;
+      background: none;
+      border: none;
+      cursor: pointer;
+    }
+    main {
+      margin-top: 80px;
+    }
+    .cart-section {
+      padding: 2rem;
+    }
+    .cart-container {
+      max-width: 800px;
+      margin: auto;
+      background: var(--nav-bg, #fff);
+      border-radius: 10px;
+      padding: 1.5rem;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      margin-top: 30px;
+    }
+    .cart-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #ccc;
+      padding: 1rem 0;
+    }
+    .cart-item img {
+      width: 80px;
+      height: 80px;
+      object-fit: cover;
+      border-radius: 8px;
+      background: #f4f4f4;
+    }
+    .cart-item-info {
+      flex: 1;
+      margin-left: 1rem;
+    }
+    .cart-item-info h3 {
+      margin: 0;
+    }
+    .cart-total {
+      text-align: right;
+      margin-top: 1.5rem;
+      font-size: 1.2rem;
+      font-weight: bold;
+    }
+    .checkout-btn,
+    .delivery-btn,
+    .logout-btn {
+      margin-top: 1rem;
+      display: block;
+      width: 100%;
+      padding: 0.75rem;
+      background: var(--accent-color, #ff6f61);
+      color: black;
+      border: none;
+      border-radius: 5px;
+      font-size: 1rem;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background 0.2s;
+    }
+    .logout-btn { background: #e74c3c; color: #fff; width:auto; }
+    .checkout-btn:hover, .delivery-btn:hover { background: #e55b50; }
+    .logout-btn:hover { background: #b5321e; }
+    .delivery-form {
+      margin-top: 1rem;
+      display: none;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    .delivery-form input,
+    .delivery-form select {
+      padding: 0.5rem;
+      font-size: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    .chat-float-btn {
+      position: fixed;
+      right: 30px;
+      bottom: 30px;
+      background: var(--accent-color, #ff6f61);
+      color: #fff;
+      border-radius: 50%;
+      width: 55px;
+      height: 55px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      text-decoration: none;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.13);
+      z-index: 2000;
+    }
+    footer {
+      flex-shrink: 0;
+      padding: 2rem;
+      text-align: center;
+      background-color: var(--nav-bg, #fff);
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+      margin-top: 30px;
+    }
+    .social-links {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      margin-top: 1rem;
+      flex-wrap: wrap;
+    }
+    .social-links a {
+      text-decoration: none;
+      font-size: 1.2rem;
+      color: #555;
+    }
+    #receiptBox {
+      background: #fff;
+      border: 2px solid #007bff;
+      padding: 2rem;
+      margin: 2rem auto;
+      max-width: 600px;
+      border-radius: 10px;
+      color: #111;
+    }
+    .dark-mode #receiptBox {
+      background: #23272e !important;
+      color: #f9f9f9 !important;
+      border-color: #ff6f61 !important;
+    }
+    @media (max-width: 768px) {
+      .nav-links {
+        display: none;
+        flex-direction: column;
+        background-color: var(--nav-bg, #fff);
+        position: absolute;
+        top: 60px;
+        right: 10px;
+        padding: 1rem;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+      .nav-links.show {
+        display: flex;
+      }
+      .menu-toggle {
+        display: block;
+      }
+      .cart-section {
+        padding: 1rem;
+      }
+      .cart-container {
+        margin-top: 15px;
+      }
+      footer {
+        font-size: 14px;
+        padding: 1rem;
+      }
+    }
+    .dark-mode {
+      --bg-color: #1f1f1f;
+      --text-color: #f9f9f9;
+      --nav-bg: #23272e;
+    }
+    .dark-mode body,
+    .dark-mode main,
+    .dark-mode .cart-section,
+    .dark-mode .cart-container {
+      background: var(--bg-color) !important;
+      color: var(--text-color) !important;
+    }
+    .dark-mode .navbar,
+    .dark-mode header,
+    .dark-mode footer {
+      background: var(--nav-bg) !important;
+    }
+    .dark-mode .cart-container {
+      background: var(--nav-bg) !important;
+      color: var(--text-color) !important;
+    }
+    #payment-method {
+      margin-top: 1rem;
+      padding: 0.5rem;
+      font-size: 1rem;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      width: 100%;
+      max-width: 350px;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrapper">
+    <header>
+      <nav class="navbar">
+        <div class="logo"><a href="index.html"><img src="images/logo.png" alt="ShopGalaxy"></a></div>
+        <ul class="nav-links" id="navLinks">
+          <li><a href="index.html" data-i18n="navHome">Home</a></li>
+          <li><a href="products.html" data-i18n="navProducts">Products</a></li>
+          <li><a href="about.html" data-i18n="navAbout">About</a></li>
+          <li><a href="contact.html" data-i18n="navContact">Contact</a></li>
+          <li><a href="login.html" data-i18n="navLogin">Login</a></li>
+          <li><a href="account.html" data-i18n="navAccount" title="Account"><i class="fa-solid fa-user"></i></a></li>
+          <li>
+            <select id="language-select">
+              <option value="en">English</option>
+              <option value="my">မြန်မာ</option>
+            </select>
+          </li>
+          <li><a href="cart.html"><i class="fa-solid fa-cart-plus"></i></a></li>
+          <li>
+            <button id="theme-toggle">🌙</button>
+          </li>
+        </ul>
+        <button class="menu-toggle" id="menuToggle">☰</button>
+      </nav>
+    </header>
+    <main>
+      <section class="cart-section">
+        <div class="cart-container">
+          <button class="logout-btn" id="logoutBtn" style="margin-bottom:1rem;" data-i18n="cartLogout">Logout</button>
+          <h2 data-i18n="cartTitle">Your Shopping Cart</h2>
+          <div id="cartItems"></div>
+          <div class="cart-total" id="cartTotal">Total: $0.00</div>
+          <button class="delivery-btn" id="showDelivery" data-i18n="cartDelivery">Use Delivery Service</button>
+          <form id="deliveryForm" class="delivery-form">
+            <input type="text" placeholder="Full Name" required data-i18n-ph="cartFullName"/>
+            <input type="text" placeholder="Phone Number" required data-i18n-ph="cartPhone"/>
+            <input type="text" placeholder="Address" required data-i18n-ph="cartAddress"/>
+            <input type="text" placeholder="City" required data-i18n-ph="cartCity"/>
+          </form>
+          <!-- Payment method select -->
+          <select id="payment-method" required>
+            <option value="" disabled selected>Select Payment Method</option>
+            <option value="cod">Cash on Delivery</option>
+            <option value="mpu">MPU Card</option>
+            <option value="kbzpay">KBZPay</option>
+            <option value="wavepay">WavePay</option>
+            <option value="aya">AYA Pay</option>
+            <option value="visa">Visa/Master</option>
+          </select>
+          <button class="checkout-btn" data-i18n="cartCheckout">Proceed to Checkout</button>
+        </div>
+      </section>
+    </main>
+    <!-- The receipt will be injected here after main -->
+  </div>
+  <footer>
+    <p>&copy; 2025 ShopGalaxy. All rights reserved.</p>
+    <div class="social-links">
+      <a href="https://www.facebook.com"><i class="fa-brands fa-facebook" style="color: #055df5;"></i></a>
+      <a href="https://www.instagram.com"><i class="fa-brands fa-instagram" style="color: #0960f6;"></i></a>
+      <a href="https://www.twitter.com"><i class="fa-brands fa-x-twitter" style="color: #1968f0;"></i></a>
+      <a href="https://www.youtube.com"><i class="fa-brands fa-youtube" style="color: #0b5dea;"></i></a>
+    </div>
+  </footer>
+  <a href="chatbot.html" class="chat-float-btn" title="Need help?">💬</a>
+  <script>
+    // i18n dictionary
+    const translations = {
+      en: {
+        cartLogout: "Logout",
+        cartTitle: "Your Shopping Cart",
+        cartDelivery: "Use Delivery Service",
+        cartFullName: "Full Name",
+        cartPhone: "Phone Number",
+        cartAddress: "Address",
+        cartCity: "City",
+        cartCheckout: "Proceed to Checkout",
+        cartEmpty: "Your cart is empty.",
+        cartRemove: "Remove",
+        cartPrice: "Price",
+        cartSeller: "Seller",
+        cartTotal: "Total",
+        cartPayment: "Payment Method",
+        paymentCOD: "Cash on Delivery",
+        paymentMPU: "MPU Card",
+        paymentKBZ: "KBZPay",
+        paymentWave: "WavePay",
+        paymentAYA: "AYA Pay",
+        paymentVisa: "Visa/Master",
+        paymentSelect: "Select Payment Method"
+      },
+      my: {
+        cartLogout: "ထွက်မည်",
+        cartTitle: "သင့်စျေးခြင်းကား",
+        cartDelivery: "ပို့ဆောင်မှုဝန်ဆောင်မှု အသုံးပြုရန်",
+        cartFullName: "အမည်အပြည့်အစုံ",
+        cartPhone: "ဖုန်းနံပါတ်",
+        cartAddress: "လိပ်စာ",
+        cartCity: "မြို့",
+        cartCheckout: "ငွေပေးချေမှုဆောင်ရွက်ရန်",
+        cartEmpty: "စျေးခြင်းကားထဲမှာ ပစ္စည်းမရှိသေးပါ။",
+        cartRemove: "ဖယ်ရှားမည်",
+        cartPrice: "စျေးနှုန်း",
+        cartSeller: "ရောင်းသူ",
+        cartTotal: "စုစုပေါင်း",
+        cartPayment: "ငွေပေးချေမှုနည်းလမ်း",
+        paymentCOD: "ငွေသားဖြင့်ပေးချေမည်",
+        paymentMPU: "MPU ကဒ်",
+        paymentKBZ: "KBZPay",
+        paymentWave: "WavePay",
+        paymentAYA: "AYA Pay",
+        paymentVisa: "Visa/Master",
+        paymentSelect: "ငွေပေးချေမှုနည်းလမ်းရွေးပါ"
+      }
+    };
+    function updateI18n() {
+      const lang = localStorage.getItem('language') || 'en';
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (translations[lang][key]) {
+          el.textContent = translations[lang][key];
+        }
+      });
+      document.querySelectorAll('[data-i18n-ph]').forEach(el => {
+        const key = el.getAttribute('data-i18n-ph');
+        if (translations[lang][key]) {
+          el.placeholder = translations[lang][key];
+        }
+      });
+      // Payment method select
+      const paymentSelect = document.getElementById('payment-method');
+      if(paymentSelect){
+        paymentSelect.options[0].text = translations[lang].paymentSelect;
+        paymentSelect.options[1].text = translations[lang].paymentCOD;
+        paymentSelect.options[2].text = translations[lang].paymentMPU;
+        paymentSelect.options[3].text = translations[lang].paymentKBZ;
+        paymentSelect.options[4].text = translations[lang].paymentWave;
+        paymentSelect.options[5].text = translations[lang].paymentAYA;
+        paymentSelect.options[6].text = translations[lang].paymentVisa;
+      }
+    }
+    // THEME TOGGLE
+    const themeToggle = document.getElementById('theme-toggle');
+    if (themeToggle) {
+      if (localStorage.getItem('theme') === 'dark') {
+        document.documentElement.classList.add('dark-mode');
+        themeToggle.textContent = '☀️';
+      } else {
+        document.documentElement.classList.remove('dark-mode');
+        themeToggle.textContent = '🌙';
+      }
+      themeToggle.addEventListener('click', () => {
+        document.documentElement.classList.toggle('dark-mode');
+        const isDark = document.documentElement.classList.contains('dark-mode');
+        localStorage.setItem('theme', isDark ? 'dark' : 'light');
+        themeToggle.textContent = isDark ? '☀️' : '🌙';
+      });
+    }
+    // LANGUAGE
+    const languageSelect = document.getElementById('language-select');
+    if (languageSelect) {
+      const lang = localStorage.getItem('language') || 'en';
+      languageSelect.value = lang;
+      updateI18n();
+      languageSelect.addEventListener('change', () => {
+        localStorage.setItem('language', languageSelect.value);
+        updateI18n();
+        renderCart();
+      });
+    } else {
+      updateI18n();
+    }
+    // Hamburger menu
+    document.getElementById('menuToggle').addEventListener('click', () => {
+      document.querySelector('.nav-links').classList.toggle('show');
+    });
+    // ========== LOGOUT BUTTON ==========
+    document.getElementById("logoutBtn").onclick = function() {
+      localStorage.removeItem("sessionUser");
+      localStorage.removeItem("cart_" + (localStorage.getItem("sessionUser") || ""));
+      window.location.href = "login.html";
+    };
+    // ========== RENDER CART ==========
+    function renderCart() {
+      updateI18n();
+      const lang = localStorage.getItem('language') || 'en';
+      const sessionUser = localStorage.getItem("sessionUser");
+      if (!sessionUser) {
+        alert(lang === "my" ? "ကျေးဇူးပြု၍ လော့ဂ်အင် ဝင်ပါ။" : "Please log in to access this feature.");
+        window.location.href = "login.html";
+      }
+      const cartItemsDiv = document.getElementById("cartItems");
+      let cart = JSON.parse(localStorage.getItem("cart_" + sessionUser)) || [];
+      let products = JSON.parse(localStorage.getItem("products")) || [];
+      cartItemsDiv.innerHTML = "";
+      let total = 0;
+      let hasProducts = false;
+      // MIGRATE: if cart contains IDs, convert to product objects for future
+      if (cart.length && (typeof cart[0] === "number" || typeof cart[0] === "string")) {
+        cart = cart.map(id => products.find(p => String(p.id) === String(id))).filter(Boolean);
+        localStorage.setItem("cart_" + sessionUser, JSON.stringify(cart));
+      }
+      cart.forEach((prod, idx) => {
+        if (!prod || typeof prod !== 'object' || !prod.price) return;
+        hasProducts = true;
+        total += Number(prod.price) || 0;
+        const div = document.createElement("div");
+        div.className = "cart-item";
+        div.innerHTML = `
+          <img src="${prod.image}" alt="${prod.name}">
+          <div class="cart-item-info">
+            <h3>${prod.name}</h3>
+            <p><span data-i18n="cartPrice">${translations[lang].cartPrice}</span>: $${Number(prod.price).toFixed(2)}</p>
+            <p><span data-i18n="cartSeller">${translations[lang].cartSeller}</span>: ${prod.seller}</p>
+          </div>
+          <button onclick="removeFromCart(${idx})" data-i18n="cartRemove">${translations[lang].cartRemove}</button>
+        `;
+        cartItemsDiv.appendChild(div);
+      });
+      if (!hasProducts) {
+        cartItemsDiv.innerHTML = `<p data-i18n="cartEmpty">${translations[lang].cartEmpty}</p>`;
+        total = 0;
+      }
+      document.getElementById("cartTotal").textContent = `${translations[lang].cartTotal || "Total"}: $${total.toFixed(2)}`;
+    }
+    window.removeFromCart = function(idx) {
+      const sessionUser = localStorage.getItem("sessionUser");
+      let cart = JSON.parse(localStorage.getItem("cart_" + sessionUser)) || [];
+      cart.splice(idx,1);
+      localStorage.setItem("cart_" + sessionUser, JSON.stringify(cart));
+      renderCart();
+    };
+    // ========== Delivery Form Toggle ==========
+    document.getElementById("showDelivery").addEventListener("click", function() {
+      document.getElementById("deliveryForm").style.display = "flex";
+    });
+    // ========== Checkout & Receipt ==========
+    document.querySelector(".checkout-btn").addEventListener("click", function() {
+      const lang = localStorage.getItem('language') || 'en';
+      const sessionUser = localStorage.getItem("sessionUser");
+      let cart = JSON.parse(localStorage.getItem("cart_" + sessionUser)) || [];
+      let products = JSON.parse(localStorage.getItem("products")) || [];
+      // Migrate IDs to product objects if necessary
+      if (cart.length && (typeof cart[0] === "number" || typeof cart[0] === "string")) {
+        cart = cart.map(id => products.find(p => String(p.id) === String(id))).filter(Boolean);
+        localStorage.setItem("cart_" + sessionUser, JSON.stringify(cart));
+      }
+      if (cart.length === 0) {
+        alert(translations[lang].cartEmpty);
+        return;
+      }
+      // Get delivery info if form is shown
+      let deliveryInfo = {};
+      const deliveryForm = document.getElementById("deliveryForm");
+      if (deliveryForm.style.display === "flex") {
+        const inputs = deliveryForm.querySelectorAll("input");
+        deliveryInfo = {
+          fullName: inputs[0].value,
+          phone: inputs[1].value,
+          address: inputs[2].value,
+          city: inputs[3].value
+        };
+        if (!deliveryInfo.fullName || !deliveryInfo.phone || !deliveryInfo.address || !deliveryInfo.city) {
+          alert(lang === "my" ? "ပို့ဆောင်မှုအချက်အလက်များ ပြည့်စုံဖြည့်ပါ။" : "Please fill out all delivery details!");
+          return;
+        }
+      }
+      // Get payment method
+      const paymentMethodSelect = document.getElementById('payment-method');
+      const paymentMethodValue = paymentMethodSelect.value;
+      if (!paymentMethodValue) {
+        alert(translations[lang].paymentSelect);
+        paymentMethodSelect.focus();
+        return;
+      }
+      // Map code to readable label
+      const paymentMethodLabel = (() => {
+        switch(paymentMethodValue) {
+          case "cod": return translations[lang].paymentCOD;
+          case "mpu": return translations[lang].paymentMPU;
+          case "kbzpay": return translations[lang].paymentKBZ;
+          case "wavepay": return translations[lang].paymentWave;
+          case "aya": return translations[lang].paymentAYA;
+          case "visa": return translations[lang].paymentVisa;
+          default: return translations[lang].cartPayment;
+        }
+      })();
+      let total = cart.reduce((sum, p) => sum + (Number(p.price) || 0), 0);
+      // Save order with delivery info and products
+      let orders = JSON.parse(localStorage.getItem("orders")) || [];
+      const newOrder = {
+        id: Date.now(),
+        buyer: sessionUser,
+        products: cart,
+        total: total,
+        delivery: deliveryInfo,
+        payment: paymentMethodLabel,
+        date: new Date().toLocaleString()
+      };
+      orders.push(newOrder);
+      localStorage.setItem("orders", JSON.stringify(orders));
+      localStorage.setItem("cart_" + sessionUser, JSON.stringify([]));
+      renderCart();
+      showReceipt(newOrder);
+    });
+    // ========== Show Receipt ==========
+    function showReceipt(order) {
+      let old = document.getElementById("receiptBox");
+      if (old) old.remove();
+      const lang = localStorage.getItem('language') || 'en';
+      const receipt = document.createElement("div");
+      receipt.id = "receiptBox";
+      receipt.innerHTML = `
+        <h2>${translations[lang].cartTitle}</h2>
+        <p><b>Order ID:</b> ${order.id}</p>
+        <p><b>Date:</b> ${order.date}</p>
+        <hr>
+        <h3>Delivery Information</h3>
+        <p><b>${translations[lang].cartFullName}:</b> ${order.delivery.fullName || "-"}</p>
+        <p><b>${translations[lang].cartPhone}:</b> ${order.delivery.phone || "-"}</p>
+        <p><b>${translations[lang].cartAddress}:</b> ${order.delivery.address || "-"}</p>
+        <p><b>${translations[lang].cartCity}:</b> ${order.delivery.city || "-"}</p>
+        <hr>
+        <h3>${translations[lang].cartPayment}</h3>
+        <p><b>${order.payment}</b></p>
+        <hr>
+        <h3>Products Purchased</h3>
+        <ul>
+          ${order.products
+            .map(
+              p =>
+                `<li>
+                  <img src="${p.image}" style="max-width:30px;vertical-align:middle;border-radius:4px;margin-right:6px;">
+                  <b>${p.name}</b> - $${Number(p.price).toFixed(2)}
+                </li>`
+            )
+            .join("")}
+        </ul>
+        <p><b>${translations[lang].cartTotal || "Total"}: $${order.total.toFixed(2)}</b></p>
+      `;
+      // insert after <main> inside .wrapper, so it's above the footer
+      const main = document.querySelector('.wrapper main');
+      main.parentNode.insertBefore(receipt, main.nextSibling);
+      receipt.scrollIntoView({ behavior: "smooth" });
+    }
+    renderCart();
+  </script>
+</body>
+</html>

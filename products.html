@@ -1,0 +1,1043 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ShopGalaxy | Products</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="css/all.min.css">
+  <link rel="stylesheet" href="css/bootstrap.min.css">
+  <style>
+    :root {
+      --accent-color: #ff6f61;
+      --nav-bg: #ffffff;
+      --light-text: #333;
+      --light-bg: #f9f9f9;
+      --light-card: #ffffff;
+      --light-border: #e0e0e0;
+      --light-shadow: rgba(0, 0, 0, 0.1);
+      --light-input: #ffffff;
+      --light-input-border: #ccc;
+    }
+
+    /* Enhanced Dark Mode Variables */
+    .dark-mode {
+      --bg-color: #0a0a0a;
+      --text-color: #ffffff;
+      --nav-bg: #1a1a1a;
+      --card-bg: #1e1e1e;
+      --border-color: #333333;
+      --shadow-color: rgba(0, 0, 0, 0.3);
+      --input-bg: #2a2a2a;
+      --input-border: #444444;
+      --hover-bg: #2d2d2d;
+      --accent-glow: rgba(255, 111, 97, 0.2);
+    }
+
+    body {
+      background-color: var(--light-bg);
+      color: var(--light-text);
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      padding: 0;
+      transition: all 0.3s ease;
+    }
+
+    .dark-mode body {
+      background-color: var(--bg-color);
+      color: var(--text-color);
+    }
+    .navbar {
+      width: 100%;
+      background-color: var(--nav-bg);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 5px var(--light-shadow);
+      position: fixed;
+      top: 0;
+      padding: 10px 20px;
+      z-index: 1000;
+      transition: all 0.3s ease;
+      backdrop-filter: blur(10px);
+    }
+
+    .dark-mode .navbar {
+      box-shadow: 0 2px 5px var(--shadow-color);
+      background: linear-gradient(135deg, var(--nav-bg), var(--card-bg));
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .nav-links {
+      list-style: none;
+      display: flex;
+      gap: 1rem;
+      margin: 0;
+      padding: 0;
+    }
+
+    .nav-links li a {
+      text-decoration: none;
+      color: var(--light-text);
+      font-weight: 500;
+      margin-left: 20px;
+      transition: all 0.3s ease;
+      padding: 8px 16px;
+      border-radius: 8px;
+    }
+
+    .nav-links li a:hover {
+      background: var(--accent-color);
+      color: white;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px var(--accent-glow);
+    }
+
+    .dark-mode .nav-links li a {
+      color: var(--text-color);
+    }
+
+    .dark-mode .nav-links li a:hover {
+      background: var(--accent-color);
+      color: white;
+      box-shadow: 0 4px 12px var(--accent-glow);
+    }
+
+    .logo img {
+      width: 70px;
+      height: 50px;
+      margin-left: 30px;
+      transition: transform 0.3s ease;
+    }
+
+    .logo img:hover {
+      transform: scale(1.05);
+    }
+
+    /* Theme Toggle Button Enhancement */
+    #theme-toggle {
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      border: none;
+      padding: 10px 15px;
+      border-radius: 25px;
+      color: white;
+      font-size: 1.2rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+    }
+
+    #theme-toggle:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+    }
+
+    .dark-mode #theme-toggle {
+      background: linear-gradient(135deg, #ff6f61, #ff8a80);
+      box-shadow: 0 4px 12px rgba(255, 111, 97, 0.3);
+    }
+
+    .dark-mode #theme-toggle:hover {
+      box-shadow: 0 6px 20px rgba(255, 111, 97, 0.4);
+    }
+
+    /* Language Select Enhancement */
+    #language-select {
+      background: var(--light-input);
+      border: 2px solid var(--light-input-border);
+      border-radius: 8px;
+      padding: 8px 12px;
+      color: var(--light-text);
+      transition: all 0.3s ease;
+    }
+
+    .dark-mode #language-select {
+      background: var(--input-bg);
+      border-color: var(--input-border);
+      color: var(--text-color);
+    }
+
+    #language-select:focus {
+      outline: none;
+      border-color: var(--accent-color);
+      box-shadow: 0 0 0 3px var(--accent-glow);
+    }
+
+    @media (max-width: 768px) {
+      .nav-links {
+        display: none;
+        flex-direction: column;
+        background: var(--light-card);
+        position: absolute;
+        top: 60px;
+        right: 10px;
+        padding: 1rem;
+        border-radius: 15px;
+        box-shadow: 0 4px 20px var(--light-shadow);
+        backdrop-filter: blur(10px);
+      }
+
+      .dark-mode .nav-links {
+        background: var(--card-bg);
+        box-shadow: 0 4px 20px var(--shadow-color);
+        border: 1px solid var(--border-color);
+      }
+
+      .nav-links.show {
+        display: flex;
+      }
+
+      .menu-toggle {
+        display: block;
+        background: none;
+        border: none;
+        font-size: 1.5rem;
+        cursor: pointer;
+        color: var(--light-text);
+        transition: all 0.3s ease;
+      }
+
+      .dark-mode .menu-toggle {
+        color: var(--text-color);
+      }
+    }
+      .logo img {
+      width:70px;
+      height:50px;
+      margin-left: 30px;
+    }
+    .product-search {
+      text-align: center;
+      padding: 1rem;
+      margin-top: 80px;
+    }
+
+    #searchInput {
+      padding: 0.75rem 1rem;
+      width: 80%;
+      max-width: 500px;
+      font-size: 1rem;
+      border: 2px solid var(--light-input-border);
+      border-radius: 10px;
+      background: var(--light-input);
+      transition: all 0.3s ease;
+    }
+
+    #searchInput:focus {
+      outline: none;
+      border-color: var(--accent-color);
+      box-shadow: 0 0 0 3px var(--accent-glow);
+    }
+
+    .dark-mode #searchInput {
+      background: var(--input-bg);
+      border-color: var(--input-border);
+      color: var(--text-color);
+    }
+
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 2rem;
+      padding: 1rem;
+    }
+
+    .product-card {
+      background: var(--light-card);
+      padding: 1.5rem;
+      border-radius: 15px;
+      box-shadow: 0 4px 20px var(--light-shadow);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      transition: all 0.3s ease;
+      border: 1px solid var(--light-border);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .product-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(135deg, var(--accent-color), #ff8a80);
+      transform: scaleX(0);
+      transition: transform 0.3s ease;
+    }
+
+    .product-card:hover::before {
+      transform: scaleX(1);
+    }
+
+    .product-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 8px 30px var(--light-shadow);
+    }
+
+    .dark-mode .product-card {
+      background: var(--card-bg);
+      box-shadow: 0 4px 20px var(--shadow-color);
+      border: 1px solid var(--border-color);
+    }
+
+    .dark-mode .product-card:hover {
+      box-shadow: 0 8px 30px var(--shadow-color);
+      background: var(--hover-bg);
+    }
+    .product-card img {
+      max-width: 100%;
+      height: 180px;
+      object-fit: contain;
+      border-radius: 10px;
+      background: #f4f4f4;
+      transition: transform 0.3s ease;
+    }
+
+    .product-card:hover img {
+      transform: scale(1.05);
+    }
+
+    .product-card h3 {
+      margin: 0.5rem 0 0.25rem;
+      font-size: 1.2rem;
+      font-weight: 600;
+    }
+
+    .product-card p {
+      margin: 0 0 0.5rem;
+      font-size: 1.1rem;
+      font-weight: bold;
+      color: var(--accent-color);
+    }
+
+    .product-card button {
+      background: linear-gradient(135deg, var(--accent-color), #ff8a80);
+      border: none;
+      padding: 0.75rem 1.5rem;
+      border-radius: 8px;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 12px rgba(255, 111, 97, 0.3);
+    }
+
+    .product-card button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(255, 111, 97, 0.4);
+    }
+    .upload-section {
+      padding: 2rem;
+      background: var(--light-card);
+      border-radius: 15px;
+      margin: 2rem;
+      box-shadow: 0 4px 20px var(--light-shadow);
+      transition: all 0.3s ease;
+    }
+
+    .dark-mode .upload-section {
+      background: var(--card-bg);
+      box-shadow: 0 4px 20px var(--shadow-color);
+      border: 1px solid var(--border-color);
+    }
+
+    .upload-section h2 {
+      text-align: center;
+      font-size: 2rem;
+      background: linear-gradient(135deg, var(--accent-color), #ff8a80);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 1.5rem;
+    }
+
+    #uploadForm {
+      display: flex;
+      flex-direction: column;
+      max-width: 400px;
+      margin: auto;
+      gap: 1rem;
+    }
+
+    #uploadForm input {
+      padding: 0.75rem;
+      font-size: 1rem;
+      border-radius: 10px;
+      border: 2px solid var(--light-input-border);
+      background: var(--light-input);
+      transition: all 0.3s ease;
+      box-sizing: border-box;
+    }
+
+    .dark-mode #uploadForm input {
+      background: var(--input-bg);
+      border-color: var(--input-border);
+      color: var(--text-color);
+    }
+
+    #uploadForm input:focus {
+      outline: none;
+      border-color: var(--accent-color);
+      box-shadow: 0 0 0 3px var(--accent-glow);
+    }
+
+    #uploadForm button {
+      background: linear-gradient(135deg, var(--accent-color), #ff8a80);
+      color: white;
+      border: none;
+      cursor: pointer;
+      padding: 0.75rem;
+      border-radius: 10px;
+      font-weight: bold;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 12px rgba(255, 111, 97, 0.3);
+    }
+
+    #uploadForm button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(255, 111, 97, 0.4);
+    }
+
+    /* Custom File Upload Styling */
+    .file-upload-container {
+      position: relative;
+      width: 100%;
+    }
+
+    .file-upload-label {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 0.75rem;
+      border: 2px dashed var(--light-input-border);
+      border-radius: 10px;
+      background: var(--light-input);
+      color: var(--light-text);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-weight: 500;
+    }
+
+    .file-upload-label:hover {
+      border-color: var(--accent-color);
+      background: rgba(255, 111, 97, 0.05);
+      transform: translateY(-1px);
+    }
+
+    .file-upload-label i {
+      font-size: 1.2rem;
+      color: var(--accent-color);
+    }
+
+    .dark-mode .file-upload-label {
+      background: var(--input-bg);
+      border-color: var(--input-border);
+      color: var(--text-color);
+    }
+
+    .dark-mode .file-upload-label:hover {
+      border-color: var(--accent-color);
+      background: rgba(255, 111, 97, 0.1);
+    }
+    #previewContainer {
+      text-align: center;
+      margin-top: 1rem;
+    }
+    #previewContainer img {
+      max-width: 200px;
+      border-radius: 10px;
+    }
+    .seller-section {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.4rem;
+      margin-bottom: 0.5rem;
+    }
+    .chat-btn {
+      background: #ff6f61;
+      border: none;
+      color: #fff;
+      padding: 0.25rem 0.6rem;
+      border-radius: 5px;
+      font-size: 1rem;
+      cursor: pointer;
+      margin-left: 0.3rem;
+      transition: background 0.2s;
+    }
+    .chat-float-btn {
+      position: fixed;
+      right: 30px;
+      bottom: 30px;
+      background: var(--accent-color, #ff6f61);
+      color: #fff;
+      border-radius: 50%;
+      width: 55px;
+      height: 55px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      text-decoration: none;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.13);
+      z-index: 2000;
+    }
+    .chat-btn:hover {
+      background: #217dbb;
+    }
+
+    .seller-section {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  margin-bottom: 0.5rem;
+}
+.chat-btn {
+  background: #ff6f61;
+  border: none;
+  color: #fff;
+  padding: 0.25rem 0.6rem;
+  border-radius: 5px;
+  font-size: 1rem;
+  cursor: pointer;
+  margin-left: 0.3rem;
+  transition: background 0.2s;
+}
+.chat-btn:hover {
+  background: #217dbb;
+}
+     footer {
+      padding: 2rem;
+      text-align: center;
+      background-color: var(--nav-bg);
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+      margin-top: 30px;
+    }
+    .social-links {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      margin-top: 1rem;
+      flex-wrap: wrap;
+    }
+    .social-links a {
+      text-decoration: none;
+      font-size: 1.2rem;
+      color: #555;
+    }
+     @media (max-width: 768px) {
+      .nav-links {
+        display: none;
+        flex-direction: column;
+        background-color: white;
+        position: absolute;
+        top: 60px;
+        right: 10px;
+        padding: 1rem;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+      .nav-links.show {
+        display: flex;
+      }
+      .menu-toggle {
+        display: block;
+      }
+      #searchInput {
+        width: 95%;
+      }
+      .product-card img {
+        height: auto;
+      }
+      footer {
+        font-size: 14px;
+        padding: 1rem;
+      }
+    }
+    .dark-mode {
+  --bg-color: #1f1f1f;
+  --text-color: #f9f9f9;
+  --nav-bg: #23272e;
+}
+.dark-mode body,
+.dark-mode main,
+.dark-mode .product-card,
+.dark-mode .upload-section,
+.dark-mode .about-section {
+  background: var(--bg-color) !important;
+  color: var(--text-color) !important;
+}
+.dark-mode .navbar,
+.dark-mode header,
+.dark-mode footer {
+  background: var(--nav-bg) !important;
+}
+  </style>
+</head>
+<body>
+  <header>
+    <nav class="navbar">
+      <div class="logo"><a href="index.html"><img src="images/logo.png" alt="ShopGalaxy"></a></div>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="products.html">Products</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="contact.html">Contact</a></li>
+        <li><a href="login.html">Login</a></li>
+        <li><a href="account.html" title="Account"><i class="fa-solid fa-user"></i></a></li>
+        <li>
+          <select id="language-select">
+            <option value="en">English</option>
+            <option value="my">မြန်မာ</option>
+          </select>
+        </li>
+        <li><a href="cart.html"><i class="fa-solid fa-cart-plus"></i></a></li>
+        <li>
+          <button id="theme-toggle">🌙</button>
+        </li>
+      </ul>
+      <button class="menu-toggle" id="menuToggle">☰</button>
+    </nav>
+  </header>
+
+  <main>
+    <section class="product-search">
+      <input type="text" id="searchInput" placeholder="Search products..." >
+    </section>
+
+    <section class="product-grid" id="productGrid">
+      <!-- Product cards will be dynamically added here -->
+    </section>
+
+    <section class="upload-section">
+      <h2>Upload New Product</h2>
+      <form id="uploadForm">
+        <div class="file-upload-container">
+          <input type="file" id="productImage" accept="image/*" required style="display: none;">
+          <label for="productImage" class="file-upload-label">
+            <i class="fa-solid fa-image"></i>
+            <span>Choose Image</span>
+          </label>
+        </div>
+        <input type="text" id="productName" placeholder="Product Name" required>
+        <input type="number" id="productPrice" placeholder="Price ($)" required>
+        <button type="submit">Upload</button>
+      </form>
+      <div id="previewContainer"></div>
+    </section>
+  </main>
+ 
+ 
+
+  <a href="chatbot.html" class="chat-float-btn" title="Need help?">💬</a>
+  
+
+<script>
+
+  // Place at the top of your <script> in products.html
+(function ensureDemoProducts() {
+  let products = JSON.parse(localStorage.getItem('products') || '[]');
+  if (!Array.isArray(products) || products.length === 0) {
+    const demoProducts = [
+      {
+        id: 1,
+        name: "Wireless Headphones",
+        price: 45,
+        image: "https://cdn.mos.cms.futurecdn.net/H45dC94VsuD7CMszsoJro3.png",
+        seller: "alice"
+      },
+      {
+        id: 2,
+        name: "Smart Watch",
+        price: 80,
+        image: "https://cdn.sectornolimits.com/i/huge/75561/9-sector-smartwatch-s-04-colours-r3253158008_v9n1b8.jpg",
+        seller: "bob"
+      },
+      {
+        id: 3,
+        name: "Sports Shoes",
+        price: 65,
+        image: "https://mm-live-21.slatic.net/kf/Sdb996cd212e44c6cb14713498bb0c719p.jpg",
+        seller: "charlie"
+      },
+      {
+        id: 4,
+        name: "Bluetooth Speaker",
+        price: 35,
+        image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS6GZ1q1QJ_NAgRJjdtNjcrGJ5ZRobA9wg2_A&s",
+        seller: "alice"
+      },
+       {
+        id: 5,
+        name: "Bottle",
+        price: 10,
+        image: "https://oceanbottle.co/cdn/shop/products/OceanBottle_BOB_Front_Ocean-Blue_2048px_927b4df9-48ca-4e74-81e0-9de65cad057c.jpg?v=166151013",
+        seller: "alice"
+      },
+       {
+        id: 6,
+        name:"Umbrella",
+        price: 15,
+        image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSmaVC8FZ1IkKGwzmulGXEUEFFdM0IWQIUFlp3oA435Hscf2OdADEM76YMhMIEIPcBAWoU&usqp=CAU"
+      },
+      {
+        id: 7,
+        name: "Portable Fan",
+        price: 7,
+        image: "https://i5.walmartimages.com/asr/b2c37199-e460-424a-af76-61b49b519558.79aef705be7dfa09261b5162a8686a59.jpeg"
+      },
+       {
+        id: 8,
+        name: "Lamp",
+        price: 20,
+        image: "https://cdn.britannica.com/88/212888-050-6795342C/study-lamp-electrical-cord.jpg"
+      },
+      {
+        id: 9,
+        name: "Bag",
+        price: 33,
+        image:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTtr1AukGhcei8ywycDYSDEgrESb-QIKAEDKg&s"
+      },
+       {
+        id: 10,
+        name: "High Heel",
+        price: 40,
+        image:"https://lh4.googleusercontent.com/proxy/92QVw0R4bO30uDFKyePfCzbNepg1TQ5rXGX6dSid92dl-LRn6vdgYgzgtd2lUYendgi7Njo71XdVV7XiXyQpwVKvudhXPFL-GLj2N6KcF9Xny5QciCYtKKz50Z0162-zGZvphFTWc8wVZwvNByTAMSjmbrJ4CN_-eAfFjxr3Yw4rxcii6BbTc3An2g_Vm0t57F7tPkYjM09HezhVdtpiiwxOy-kw6TxhqA"
+      },
+       {
+        id: 11,
+        name: "Sunglass",
+        price: 10,
+        image:"https://shadyrays.com/cdn/shop/files/DSC_3635_Original.jpg?v=1747238059&width=5000"
+      },
+       {
+        id: 12,
+        name: "Hat",
+        price: 15,
+        image:"https://wallaroohats.com/cdn/shop/products/Outback_Natural_232191f7-a65c-4dc2-a79b-cbc320b1054a.jpg?v=1736971865&width=750"
+      }
+    ];
+    localStorage.setItem('products', JSON.stringify(demoProducts));
+  }
+})();
+
+// DEMO PRODUCTS: Add to localStorage if not present
+if (!localStorage.getItem('products')) {
+  const demoProducts = [
+    {
+      id: 1,
+      name: "Wireless Headphones",
+      price: 45,
+      image: "https://cdn.mos.cms.futurecdn.net/H45dC94VsuD7CMszsoJro3.png",
+      seller: "alice"
+    },
+    {
+      id: 2,
+      name: "Smart Watch",
+      price: 80,
+      image: "https://cdn.sectornolimits.com/i/huge/75561/9-sector-smartwatch-s-04-colours-r3253158008_v9n1b8.jpg",
+      seller: "bob"
+    },
+    {
+      id: 3,
+      name: "Sports Shoes",
+      price: 65,
+      image: "https://mm-live-21.slatic.net/kf/Sdb996cd212e44c6cb14713498bb0c719p.jpg",
+      seller: "charlie"
+    },
+    {
+      id: 4,
+      name: "Bluetooth Speaker",
+      price: 35,
+      image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS6GZ1q1QJ_NAgRJjdtNjcrGJ5ZRobA9wg2_A&s",
+      seller: "alice"
+    },
+     {
+        id: 5,
+        name: "Bottle",
+        price: 10,
+        image: "https://oceanbottle.co/cdn/shop/products/OceanBottle_BOB_Front_Ocean-Blue_2048px_927b4df9-48ca-4e74-81e0-9de65cad057c.jpg?v=166151013",
+        seller: "alice"
+      },
+       {
+        id: 6,
+        name:"Umbrella",
+        price: 15,
+        image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSmaVC8FZ1IkKGwzmulGXEUEFFdM0IWQIUFlp3oA435Hscf2OdADEM76YMhMIEIPcBAWoU&usqp=CAU"
+      },
+      {
+        id: 7,
+        name: "Portable Fan",
+        price: 7,
+        image: "https://i5.walmartimages.com/asr/b2c37199-e460-424a-af76-61b49b519558.79aef705be7dfa09261b5162a8686a59.jpeg"
+      },
+      {
+        id: 8,
+        name: "Lamp",
+        price: 20,
+        image: "https://cdn.britannica.com/88/212888-050-6795342C/study-lamp-electrical-cord.jpg"
+      },
+      {
+        id: 9,
+        name: "Bag",
+        price: 33,
+        image:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTtr1AukGhcei8ywycDYSDEgrESb-QIKAEDKg&s"
+      },
+       {
+        id: 10,
+        name: "High Heel",
+        price: 40,
+        image:"https://lh4.googleusercontent.com/proxy/92QVw0R4bO30uDFKyePfCzbNepg1TQ5rXGX6dSid92dl-LRn6vdgYgzgtd2lUYendgi7Njo71XdVV7XiXyQpwVKvudhXPFL-GLj2N6KcF9Xny5QciCYtKKz50Z0162-zGZvphFTWc8wVZwvNByTAMSjmbrJ4CN_-eAfFjxr3Yw4rxcii6BbTc3An2g_Vm0t57F7tPkYjM09HezhVdtpiiwxOy-kw6TxhqA"
+      },
+       {
+        id: 11,
+        name: "Sunglass",
+        price: 10,
+        image:"https://shadyrays.com/cdn/shop/files/DSC_3635_Original.jpg?v=1747238059&width=5000"
+      },
+       {
+        id: 12,
+        name: "Hat",
+        price: 15,
+        image:"https://wallaroohats.com/cdn/shop/products/Outback_Natural_232191f7-a65c-4dc2-a79b-cbc320b1054a.jpg?v=1736971865&width=750"
+      }
+  ];
+  localStorage.setItem('products', JSON.stringify(demoProducts));
+}
+
+const sessionUser = localStorage.getItem("sessionUser");
+
+// -------- Product Upload Logic --------
+document.getElementById("uploadForm").addEventListener("submit", function(e) {
+  e.preventDefault();
+  if (!sessionUser) {
+    alert("Please log in to upload.");
+    window.location.href = "login.html";
+    return;
+  }
+  const fileInput = document.getElementById("productImage");
+  const name = document.getElementById("productName").value.trim();
+  const price = parseFloat(document.getElementById("productPrice").value);
+
+  if (!fileInput.files[0]) {
+    alert("Please select an image.");
+    return;
+  }
+  const reader = new FileReader();
+  reader.onload = function(ev) {
+    let products = JSON.parse(localStorage.getItem("products")) || [];
+    const newProduct = {
+      id: Date.now(),
+      name,
+      price,
+      image: ev.target.result,
+      seller: sessionUser
+    };
+    products.push(newProduct);
+    localStorage.setItem("products", JSON.stringify(products));
+    alert("Product uploaded!");
+    window.location.reload();
+  };
+  reader.readAsDataURL(fileInput.files[0]);
+});
+
+// --------- Display Products and Add to Cart/DELETE ---------
+function renderProducts() {
+  const productGrid = document.getElementById("productGrid");
+  productGrid.innerHTML = "";
+  let products = JSON.parse(localStorage.getItem("products")) || [];
+  const searchValue = (localStorage.getItem('searchQuery') || "").trim().toLowerCase() ||
+                      (document.getElementById("searchInput").value || "").trim().toLowerCase();
+  let matched = [];
+  if (searchValue) {
+    matched = products.filter(p => p.name.toLowerCase().includes(searchValue));
+    products = matched.length ? matched : products;
+  }
+  products.forEach(prod => {
+    const card = document.createElement("div");
+    card.className = "product-card";
+    card.innerHTML = `
+      <img src="${prod.image}" alt="${prod.name}"/>
+      <h3>${prod.name}</h3>
+      <p>Price: $${prod.price.toFixed(2)}</p>
+      
+    <div class="seller-section">
+    <span>Seller: ${prod.seller}</span>
+  </div>
+  <div class="product-actions">
+    <button class="chat-icon-btn" onclick="goToChat('${prod.seller}')" title="Chat with seller">
+      <i class="fa-solid fa-comments"></i>
+    </button>
+    <button class="add-cart-btn" onclick="addToCart(${prod.id})">Add to Cart</button>
+  </div>
+     ${
+  (sessionUser && prod.seller === sessionUser)
+    ? `<button style="margin-top:8px;background:#e74c3c;" onclick="deleteProduct(${prod.id})">Delete</button>`
+    : ""
+}
+    `;
+    // Highlight if matched from search
+    if (searchValue && prod.name.toLowerCase().includes(searchValue)) {
+      card.style.border = "2px solid var(--accent-color,#ff6f61)";
+    }
+    productGrid.appendChild(card);
+  });
+  localStorage.removeItem('searchQuery');
+}
+
+// --------- DELETE PRODUCT LOGIC ---------
+window.deleteProduct = function(productId) {
+  if (!sessionUser) return alert("Please login.");
+  let products = JSON.parse(localStorage.getItem("products")) || [];
+  // Only allow user to delete their own upload
+  products = products.filter(p => !(String(p.id) === String(productId) && p.seller === sessionUser));
+  localStorage.setItem("products", JSON.stringify(products));
+  renderProducts();
+  alert("Product deleted.");
+};
+
+window.addToCart = function(productId) {
+  if (!sessionUser) {
+    alert("Please login to add to cart.");
+    window.location.href = "login.html";
+    return;
+  }
+  let products = JSON.parse(localStorage.getItem("products")) || [];
+  let prod = products.find(p => String(p.id) === String(productId));
+  if (!prod) return alert("Product not found.");
+  let cart = JSON.parse(localStorage.getItem("cart_" + sessionUser)) || [];
+  cart.push(prod); // Store full product object
+  localStorage.setItem("cart_" + sessionUser, JSON.stringify(cart));
+  alert("Added to cart!");
+};
+
+document.getElementById("searchInput").addEventListener("input", renderProducts);
+
+renderProducts();
+
+// --- Optional: Reset demo products button for easy testing ---
+function resetDemoProducts() {
+  localStorage.removeItem('products');
+  location.reload();
+}
+</script>
+<button onclick="resetDemoProducts()" style="margin:10px 0 0 10px;padding:7px 16px;background:#ff6f61;color:#fff;border:none;border-radius:5px;font-weight:bold;cursor:pointer;">
+  Reset Demo Products
+</button>
+ <footer>
+    <p>&copy; 2025 ShopGalaxy. All rights reserved.</p>
+    <div class="social-links">
+      <a href="https://www.facebook.com"><i class="fa-brands fa-facebook" style="color: #055df5;"></i></a>
+      <a href="https://www.instagram.com"><i class="fa-brands fa-instagram" style="color: #0960f6;"></i></a>
+      <a href="https://www.twitter.com"><i class="fa-brands fa-x-twitter" style="color: #1968f0;"></i></a>
+      <a href="https://www.youtube.com"><i class="fa-brands fa-youtube" style="color: #0b5dea;"></i></a>
+    </div>
+  </footer>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js" integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q" crossorigin="anonymous"></script>
+   <script>
+     const translations = {
+  en: {
+    heroTitle: "Welcome to ShopGalaxy",
+    heroDesc: "Your trusted online marketplace to buy & sell everything you need",
+    searchBtn: "Search",
+    trendingTitle: "🔥 Trending Products",
+    uploadTitle: "Upload New Product",
+    uploadProductName: "Product Name",
+    uploadProductPrice: "Price ($)",
+    uploadBtn: "Upload",
+  },
+  my: {
+    heroTitle: "ShopGalaxy သို့ရောက်ရှိလာကြသည်ကို ကြိုဆိုပါသည်",
+    heroDesc: "သင်လိုအပ်သည့် အရာအားလုံးကို ဝယ်ယူရောင်းချနိုင်သည့် ယုံကြည်စိတ်ချရသော အွန်လိုင်းစျေးကွက်",
+    searchBtn: "ရှာဖွေပါ",
+    trendingTitle: "🔥 ခေတ်စားပစ္စည်းများ",
+    uploadTitle: "ပစ္စည်းအသစ် တင်ပါ",
+    uploadProductName: "ပစ္စည်းအမည်",
+    uploadProductPrice: "ဈေးနှုန်း ($)",
+    uploadBtn: "တင်ပါ",
+  }
+};
+
+function updateI18n() {
+  const lang = localStorage.getItem('language') || 'en';
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    if (translations[lang][key]) {
+      el.textContent = translations[lang][key];
+    }
+  });
+  // Input placeholders
+  if (document.getElementById('productName')) {
+    document.getElementById('productName').placeholder = translations[lang].uploadProductName;
+  }
+  if (document.getElementById('productPrice')) {
+    document.getElementById('productPrice').placeholder = translations[lang].uploadProductPrice;
+  }
+}
+
+// --- THEME TOGGLE ---
+const themeToggle = document.getElementById('theme-toggle');
+if (themeToggle) {
+  if (localStorage.getItem('theme') === 'dark') {
+    document.documentElement.classList.add('dark-mode');
+    themeToggle.textContent = '☀️';
+  } else {
+    document.documentElement.classList.remove('dark-mode');
+    themeToggle.textContent = '🌙';
+  }
+
+  themeToggle.addEventListener('click', () => {
+    document.documentElement.classList.toggle('dark-mode');
+    const isDark = document.documentElement.classList.contains('dark-mode');
+    localStorage.setItem('theme', isDark ? 'dark' : 'light');
+    themeToggle.textContent = isDark ? '☀️' : '🌙';
+  });
+}
+
+// --- LANGUAGE SELECTOR ---
+const languageSelect = document.getElementById('language-select');
+if (languageSelect) {
+  const lang = localStorage.getItem('language') || 'en';
+  languageSelect.value = lang;
+  updateI18n();
+
+  languageSelect.addEventListener('change', () => {
+    localStorage.setItem('language', languageSelect.value);
+    updateI18n();
+  });
+} else {
+  updateI18n();
+}
+
+// Optional: Apply dark mode styles on load
+if (localStorage.getItem('theme') === 'dark') {
+  document.documentElement.classList.add('dark-mode');
+}
+    document.getElementById('menuToggle').addEventListener('click', () => {
+      document.querySelector('.nav-links').classList.toggle('show');
+    });
+    window.goToChat = function(seller) {
+  if (!sessionUser) {
+    alert("Please log in to chat.");
+    window.location.href = "login.html";
+    return;
+  }
+  if (seller === sessionUser) {
+    alert("You cannot chat with yourself.");
+    return;
+  }
+  // Redirect to the chat page with seller as query param
+  window.location.href = `chat.html?seller=${encodeURIComponent(seller)}`;
+};
+
+
+
+  </script>
+</body>
+</html>
